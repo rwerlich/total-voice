@@ -3,7 +3,6 @@
 class Sockets
 {
 
-
     /*
      * Create a Socket conection
      */
@@ -11,22 +10,22 @@ class Sockets
     {
         $socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
         if (!$socket) {
-            echo "Falha na função socket_create(), motivo: " . socket_strerror(socket_last_error());
+            echo "Fail to socket_create(), reason: " . socket_strerror(socket_last_error());
             return false;
         }
-        echo "Conectando ao ip: {$ip} na porta: {$port}...\n\n";
+        echo "Establishing connection {$ip}:{$port}\n";
         $connect = socket_connect($socket, $ip, $port);
         if (!$connect) {
-            echo "Falha na função socket_connect(), motivo: {$connect} " . socket_strerror(socket_last_error($socket));
+            echo "Fail to socket_connect(), reason: " . socket_strerror(socket_last_error($socket));
             return false;
         }
         return $socket;
     }
 
     /*
-     * Sen a Requisition to server
+     * Send a Requisition to server
      */
-    public static function sendRequisition(String $headers = '', array $data = [], $socket)
+    public static function sendRequisition(String $headers, array $data, $socket)
     {
         if (!empty($headers)) {
             if (!self::sendHeaders($headers, $socket)) {
@@ -46,7 +45,7 @@ class Sockets
      */
     private static function sendHeaders(String $headers, $socket)
     {
-        echo "Sending HTTP headers...\n";
+        echo "Sending HTTP headers\n";
         if (!socket_write($socket, $headers, strlen($headers))) {
             return false;
         }
@@ -59,7 +58,7 @@ class Sockets
     private static function sendBody(array $data, $socket)
     {
         $json = json_encode($data);
-        echo "Sending data...\n";
+        echo "Sending HTTP body\n";
         if (!socket_send($socket, $json, strlen($json), 0)) {
             return false;
         }
@@ -72,7 +71,7 @@ class Sockets
      */
     public static function read($socket)
     {
-        echo "Response:\n\n";
+        echo "\nResponse:\n";
         while ($response = socket_read($socket, 2048)) {
             echo "{$response}\n";
         }
@@ -83,7 +82,7 @@ class Sockets
      */
     public static function close($socket)
     {
-        echo "Closing socket...\n";
+        echo "\nClosing socket...\n";
         socket_close($socket);
         echo "Socket closed\n";
         return true;
