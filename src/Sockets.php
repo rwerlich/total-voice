@@ -28,7 +28,6 @@ class Sockets
      */
     public static function sendRequisition(String $headers, array $data, $socket)
     {
-
         echo "Send requisiton\n";
         if (!empty($data)) {
             $json = json_encode($data);
@@ -65,6 +64,5 @@ class Sockets
         echo "\nClosing socket...\n";
         socket_close($socket);
         echo "Socket closed\n";
-        return true;
     }
 }

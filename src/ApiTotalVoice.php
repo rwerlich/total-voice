@@ -30,8 +30,7 @@ class ApiTotalVoice
             'numero_destino' => $phoneNumber,
             'mensagem' => $msg
         ];
-        if (Sockets::sendRequisition($header, $data, $socket)) {
-            Sockets::close($socket);
-        }
+        Sockets::sendRequisition($header, $data, $socket);
+        Sockets::close($socket);
     }
 }
