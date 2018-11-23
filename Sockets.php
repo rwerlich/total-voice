@@ -2,7 +2,6 @@
 
 class Sockets
 {
-
     /*
      * Create a Socket conection
      */
@@ -27,41 +26,20 @@ class Sockets
      */
     public static function sendRequisition(String $headers, array $data, $socket)
     {
-        if (!empty($headers)) {
-            if (!self::sendHeaders($headers, $socket)) {
-                return false;
-            }
-        }
-        if (!empty($data)) {
-            if (!self::sendBody($data, $socket)) {
-                return false;
-            }
-        }
-        return true;
-    }
 
-    /*
-     * Send requisiton headers
-     */
-    private static function sendHeaders(String $headers, $socket)
-    {
-        echo "Sending HTTP headers\n";
+        echo "Send requisiton\n";
+        if (!empty($data)) {
+            $json = json_encode($data);
+            $length = strlen($json);
+            $headers .= "Content-Type:  application/json\r\n";
+            $headers .= "Content-Length: {$length} \r\n\r\n";
+            $headers .= $json;
+        }
         if (!socket_write($socket, $headers, strlen($headers))) {
             return false;
         }
-        return true;
-    }
-
-    /*
-     * Send requisiton body
-     */
-    private static function sendBody(array $data, $socket)
-    {
-        $json = json_encode($data);
-        echo "Sending HTTP body\n";
-        if (!socket_send($socket, $json, strlen($json), 0)) {
-            return false;
-        }
+        echo $headers;
+        self::read($socket);
         return true;
     }
 
@@ -71,7 +49,7 @@ class Sockets
      */
     public static function read($socket)
     {
-        echo "\nResponse:\n";
+        echo "\n\nResponse:\n";
         while ($response = socket_read($socket, 2048)) {
             echo "{$response}\n";
         }
@@ -87,5 +65,4 @@ class Sockets
         echo "Socket closed\n";
         return true;
     }
-
 }

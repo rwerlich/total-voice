@@ -1,10 +1,8 @@
 <?php
-
 require 'Sockets.php';
 
 class ApiTotalVoice
 {
-
     private $acessToken;
 
     public function __construct(String $token)
@@ -19,23 +17,19 @@ class ApiTotalVoice
         // retrieve ip address of host
         $ip = gethostbyname('api.totalvoice.com.br');
         $socket = Sockets::connect($ip, $port);
-        if(!$socket){
+        if (!$socket) {
             return;
         }
         $header = "POST /sms HTTP/1.1\r\n";
         $header .= "Host: api.totalvoice.com.br\r\n";
-        $header .= "Accept:  application/json\r\n";
-        $header .= "Content-Type:  application/json\r\n";
+        $header .= "User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36\r\n";
         $header .= "Access-Token:  {$this->acessToken}\r\n";
-        $header .= "Connection: Keep-Alive\r\n\r\n";
-        $data = array(
-            'numero_destino' => '48996190961',
-            'mensagem' => 'Teste de sms enviado via socket'
-        );
-        if(Sockets::sendRequisition($header, $data, $socket)){
-            Sockets::read($socket);
+        $data = [
+            'numero_destino' => $phoneNumber,
+            'mensagem' => $msg
+        ];
+        if (Sockets::sendRequisition($header, $data, $socket)) {
             Sockets::close($socket);
         }
     }
-
 }
