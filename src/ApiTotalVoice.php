@@ -1,5 +1,7 @@
 <?php
-require 'Sockets.php';
+
+namespace App;
+use App\Sockets;
 
 class ApiTotalVoice
 {
